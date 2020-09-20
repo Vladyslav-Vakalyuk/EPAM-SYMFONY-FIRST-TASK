@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    {% block stylesheets %}{% endblock %}
+</head>
+<body>
+{% block body %}{% endblock %}
+{% block javascripts %}{% endblock %}
+<form method="GET" action="/">
+    <label> Please enter word
+        <input type="text" name="word">
+    </label>
+    <button type="submit">Send</button>
+</form>
+{% if data %}
+
+    {% for item in data.results %}
+        {% for lexicalEntrie in item.lexicalEntries %}
+
+
+            {% for entrie in lexicalEntrie.entries %}
+
+                {% for pronunciation in entrie.pronunciations %}
+
+                    <figure>
+                        <figcaption>Listen to the T-Rex:</figcaption>
+                        <audio
+                                controls
+                                src="{{ pronunciation.audioFile }}">
+                            Your browser does not support the
+                            <code>audio</code> element.
+                        </audio>
+                    </figure>
+
+                {% endfor %}
+
+                {% for sense in entrie.senses %}
+
+
+                    {% for definition in sense.definitions %}
+                        Definition:
+                        {{ definition }}
+                        <hr>
+                        <br>
+
+                    {% endfor %}
+
+
+                {% endfor %}
+
+
+            {% endfor %}
+        {% endfor %}
+
+    {% endfor %}
+{% endif %}
+{#{{ dump(histories) }}#}
+{% if histories %}
+    <h1>History</h1>
+    {% for history in histories %}
+        <a href="/?word={{ history.0.name }}">{{ history.0.name }} - {{ history.count }}</a>
+        <hr>
+        <br>
+    {% endfor %}
+
+{% endif %}
+</body>
+</html>
